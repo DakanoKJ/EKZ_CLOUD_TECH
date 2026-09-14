@@ -1,0 +1,47 @@
+name: Deploy to Yandex Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY_ID: ${{ secrets.YC_REGISTRY_ID }}
+  CLUSTER_NAME: ${{ secrets.YC_CLUSTER_NAME }}
+  IMAGE_NAME: app
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозитория
+        uses: actions/checkout@v4
+
+      - name: Установка и авторизация YC CLI
+        uses: yandex-cloud/yc-github-actions/yc-cli-install@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          yc-folder-id: ${{ secrets.YC_FOLDER_ID }}
+
+      - name: Логин в Yandex Container Registry
+        run: |
+          yc container registry configure-docker
+
+      - name: Сборка Docker-образа
+        run: |
+          docker build -t cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG} .
+
+      - name: Пуш образа в YCR
+        run: |
+          docker push cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+
+      - name: Получение kubeconfig кластера
+        run: |
+          yc managed-kubernetes cluster get-credentials "${CLUSTER_NAME}" --external --force
+
+      - name: Обновление образа в Kubernetes
+        run: |
+          kubectl set image deployment/web-app \
+            app-container=cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}
