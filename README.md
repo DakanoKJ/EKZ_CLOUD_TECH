@@ -57,7 +57,7 @@ Workflow: `.github/workflows/deploy.yml`. При каждом push в `main`:
 1. Авторизация в Yandex Cloud по ключу сервисного аккаунта.
 2. `docker build` образа с тегом `${{ github.sha }}`.
 3. `docker push` в Yandex Container Registry.
-4. `kubectl set image deployment/web-app web-app=cr.yandex/<REGISTRY_ID>/app:${SHA}` (имя контейнера `web-app` — так его называет `kubectl create deployment` по умолчанию).
+4. `kubectl set image deployment/web-app app=cr.yandex/<REGISTRY_ID>/app:${SHA}` (имя контейнера — `app`, `kubectl create deployment` берёт его из имени образа, а не из имени деплоймента).
 
 ### Секреты, которые нужно добавить в GitHub (Settings → Secrets and variables → Actions)
 
@@ -86,7 +86,7 @@ kubectl get service web-app
 
 Приложение доступно по `http://<EXTERNAL-IP>/` и `http://<EXTERNAL-IP>/health` (проверка подключения к БД).
 
-Скриншот работающего приложения по внешнему IP приложен отдельно к сдаче задания.
+![Скриншот работающего приложения](screenshots/web-app-external-ip.png)
 
 ## Важные нюансы security group (Managed Kubernetes в Yandex Cloud)
 

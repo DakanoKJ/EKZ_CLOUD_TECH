@@ -44,4 +44,4 @@ jobs:
       - name: Обновление образа в Kubernetes
         run: |
           kubectl set image deployment/web-app \
-            web-app=cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+            app=cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}

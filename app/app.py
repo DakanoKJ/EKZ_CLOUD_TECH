@@ -22,9 +22,22 @@ def get_db_connection():
     )
 
 
+FULL_NAME = "Полтавский Марк Эдуардович"
+FAVORITE_ICE_CREAM = "фисташка-шоколад"
+
+
 @app.route("/")
 def index():
-    return jsonify(status="ok", message="web-app is running")
+    return f"""
+    <html>
+      <head><title>web-app</title></head>
+      <body style="font-family: sans-serif; padding: 2rem;">
+        <h1>web-app is running</h1>
+        <p><b>ФИО:</b> {FULL_NAME}</p>
+        <p><b>Любимый вкус мороженого:</b> {FAVORITE_ICE_CREAM}</p>
+      </body>
+    </html>
+    """
 
 
 @app.route("/health")
