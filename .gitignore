@@ -2,7 +2,9 @@ key.json
 *.tfstate
 *.tfstate.*
 .terraform/
-.terraform.lock.hcl
 *.tfvars
 __pycache__/
 *.pyc
+apply*.log
+tfplan*
+schema.json

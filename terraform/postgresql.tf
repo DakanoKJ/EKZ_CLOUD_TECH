@@ -1,7 +1,8 @@
 resource "yandex_mdb_postgresql_cluster" "app_postgres" {
-  name        = var.postgres_cluster_name
-  environment = "PRESTABLE"
-  network_id  = yandex_vpc_network.app_network.id
+  name               = var.postgres_cluster_name
+  environment        = "PRESTABLE"
+  network_id         = yandex_vpc_network.app_network.id
+  security_group_ids = [yandex_vpc_security_group.k8s_sg.id]
 
   config {
     version = "15"

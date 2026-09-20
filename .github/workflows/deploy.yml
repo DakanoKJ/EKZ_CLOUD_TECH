@@ -31,7 +31,7 @@ jobs:
 
       - name: Сборка Docker-образа
         run: |
-          docker build -t cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG} .
+          docker build --provenance=false --sbom=false -t cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG} .
 
       - name: Пуш образа в YCR
         run: |
@@ -44,4 +44,4 @@ jobs:
       - name: Обновление образа в Kubernetes
         run: |
           kubectl set image deployment/web-app \
-            app-container=cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+            web-app=cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}
